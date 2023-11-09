@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.4/dist/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            margin: 0;
+            background-color:#daebf3;
+        }
+        .input-container {
+            margin-bottom: 10px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+        }
+
+        tr{
+            background-color: white;
+        }
+ 
+        input {
+            width: fit-content;
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 5px;
+            height: 20px;
+        }
+
+        button {
+            background-color: #0074d9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+           
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            border-width: 1.5px;border-color: black;
+            
+        }
+
+        td{
+            background-color:white;
+        }
+       
+        #divAll{
+            display: flex;
+            position: absolute;
+            
+        }
+        #div1{
+            position: fixed;
+            left: 5%;
+            border-width: 5px ;
+            padding: 10px;
+            border: solid blue;
+            border-radius: 15px;
+            background-color: rgb(255, 255, 255);
+        }
+        #div2{
+            position: relative;
+            left: 30%;
+            width: fit-content;
+            margin-left: 200px;
+            margin-bottom: 20px;
+            
+        }
+        #header{
+            display: flex;
+            color: #f2f2f2;
+            background-color: #0056b3;
+            margin-bottom: 20px;
+            height: fit-content;
+            justify-content: space-around;
+        }
+        #buttonClick{
+            position: fixed;
+            bottom: 5%;
+            right: 10px;
+        }
+        #scrollToTopButton{
+            background-color: orange;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+   
+    cursor: pointer;
+    border-radius: 100px;
+        }
+        #scrollToBottomButton {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 100px;
+}
+        a{
+            color: white;
+            text-decoration: none;
+        }
+        #header :hover{
+            opacity: 0.5;
+           
+        }
+        #startRecord,#startRecord1,#startRecord2,#startRecord3,#startRecord4,#startRecord5,#startRecord6{
+            background-color: rgb(189, 203, 214);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #stopRecord,#stopRecord1,#stopRecord2,#stopRecord3,#stopRecord4,#stopRecord6,#stopRecord5{
+            background-color: rgb(189, 203, 214);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #startRecord:hover{
+            opacity: 0.6;
+        }
+        #startRecord:active{
+            background-color: red;
+        }
+        #stopRecord:hover{
+            opacity: 0.6;
+        }
+        #stopRecord:active{
+            background-color: green;
+        }
+        
+        #startRecord1:hover{
+            opacity: 0.6;
+        }
+        #startRecord1:active{
+            background-color: red;
+        }
+        #stopRecord1:hover{
+            opacity: 0.6;
+        }
+        #stopRecord1:active{
+            background-color: green;
+        }
+        
+        #startRecord2:hover{
+            opacity: 0.6;
+        }
+        #startRecord2:active{
+            background-color: red;
+        }
+        #stopRecord2:hover{
+            opacity: 0.6;
+        }
+        #stopRecord2:active{
+            background-color: green;
+        }
+
+        #startRecord3:hover{
+            opacity: 0.6;
+        }
+        #startRecord3:active{
+            background-color: red;
+        }
+        #stopRecord3:hover{
+            opacity: 0.6;
+        }
+        #stopRecord3:active{
+            background-color: green;
+        }
+
+        #startRecord4:hover{
+            opacity: 0.6;
+        }
+        #startRecord4:active{
+            background-color: red;
+        }
+        #stopRecord4:hover{
+            opacity: 0.6;
+        }
+        #stopRecord4:active{
+            background-color: green;
+        }
+
+        #startRecord5:hover{
+            opacity: 0.6;
+        }
+        #startRecord5:active{
+            background-color: red;
+        }
+        #stopRecord5:hover{
+            opacity: 0.6;
+        }
+        #stopRecord5:active{
+            background-color: green;
+        }
+
+        #startRecord6:hover{
+            opacity: 0.6;
+        }
+        #startRecord6:active{
+            background-color: red;
+        }
+        #stopRecord6:hover{
+            opacity: 0.6;
+        }
+        #stopRecord6:active{
+            background-color: green;
+        }
+
+        #startRecord7:hover{
+            opacity: 0.6;
+        }
+        #startRecord7:active{
+            background-color: red;
+        }
+        #stopRecord7:hover{
+            opacity: 0.6;
+        }
+        #stopRecord7:active{
+            background-color: green;
+        }
+    </style>
+    <title>LÀM TOA HÀNG</title>
+</head>
+<body>
+    <div id="header">
+        <h2 style="margin-right: 5% ;color: aliceblue;"><a href="#">TRANG CHỦ</a></h2>
+        <h2 ><a href="https://cuahangthuykim.github.io/HoaDonKhachHang/">TÍNH HOÁ ĐƠN KHÁCH</a></h2>
+        <h2  style="margin-left:5%"  ><a href="https://cuahangthuykim.github.io/ToaHang/">LÀM TOA HÀNG</a></h2>
+    </div>
+    <div id="divAll">
+        
+    <div id="div1">
+        <H3 style="color: #0074d9;font-style: italic;font-weight: bold;">THÊM THÔNG TIN</H3>
+
+    <div class="input-container">
+        <label for="nhaCungCap">NHÀ CUNG CẤP</label>
+        <input placeholder="NHẬP NHÀ CUNG CẤp" type="text" id="nhaCungCap" name="nhaCungCap">
+        <button id="startRecord5"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button id="stopRecord5"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+
+    <div class="input-container">
+        <label for="dienGiai">TÊN HÀNG HOÁ</label>
+        <input placeholder="NHẬP TÊN HÀNG" type="text" id="dienGiai" name="dienGiai">
+        <button id="startRecord4"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button id="stopRecord4"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+
+    <div class="input-container">
+        <label for="soLuong">SỐ LƯỢNG</label>
+        <input placeholder="NHẬP SỐ LƯỢNG" type="number" id="soLuong" name="soLuong">
+        <button id="startRecord"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button id="stopRecord"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+
+    <div class="input-container">
+        <label for="giaNhap">GIÁ NHẬP</label>
+        <input placeholder="NHẬP GIÁ NHẬP" type="number" id="giaNhap" name="giaNhap">
+        <button id="startRecord1"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button id="stopRecord1"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+
+    <div class="input-container">
+        <label for="tiLe">Tỉ lệ %</label>
+        <input placeholder="NHẬP TỈ LỆ GIÁ BÁN" type="number" id="tiLe" name="tiLe">
+        <button style="display: none;" id="startRecord2"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button style="display: none;" id="stopRecord2"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+    <div class="input-container">
+        <label for="donGia">ĐƠN GIÁ</label>
+        <input placeholder="NHẬP ĐƠN GIÁ " type="number" id="donGia" name="donGia">
+        <button id="startRecord3"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button id="stopRecord3"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+    
+    <div class="input-container">
+        <label for="traTien">TRẢ TIỀN</label>
+        <input placeholder="NHẬP SỐ TIỀN TRẢ" type="number" id="traTien" name="traTien">
+        <button style="display: none;" id="startRecord6"><i class="fa-solid fa-microphone" style="color: #6f7785;"></i></button>
+        <button style="display: none;" id="stopRecord6"><i class="fa-solid fa-stop" style="color: #848c9a;"></i></button>
+    </div>
+
+
+    <button id="addDataButton">THÊM HÀNG</button><br><br>
+    <button id="exportExcelButton">XUẤT TOA HÀNG</button><br><br>
+    <button id="exportDataButton">XUẤT FILE TRA CỨU</button><br><br>
+</div>
+
+    <div id="div2">
+        <h1 style="margin-left: 35%;font-weight: bold;text-decoration: dotted ;color: red;">THÔNG TIN TOA HÀNG</h1>
+    <table >
+        <thead  >
+            <tr >
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2); border-width: 2px;border-color: black;">STT</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">SỐ LƯỢNG</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">GIÁ NHẬP</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">ĐƠN GIÁ</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">DIỄN GIẢI</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">TỔNG TIỀN</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">TRẢ TIỀN</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">NHÀ CUNG CẤP</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">MÃ GIÁ NHẬP</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">MÃ GIÁ BÁN</th>
+                <th style="color: whitesmoke;background-color: rgb(2, 126, 2);border-width: 2px;border-color: black;">MÃ HÀNG</th>
+                
+            </tr>
+        </thead>
+        <tbody id="tableBody" style="font-weight: bold;">
+            <!-- Dòng dữ liệu sẽ được thêm sau -->
+            
+        </tbody>
+        <tfoot>
+            <tr id="totalRow" style="font-weight: bold;font-size: 20px;">
+                <td colspan="5" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;">TỔNG TOA</td>
+                <td id="tongToa" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;"></td>
+            </tr>
+            <tr id="totalRow" style="font-weight: bold;font-size: 20px;"> 
+                <td colspan="5" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;">TRẢ TIỀN</td>
+                <td id="tongTraTien" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;"></td>
+            </tr>
+            <tr id="totalRow" style="font-weight: bold;font-size: 20px;" >
+                <td colspan="5" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;">CÒN NỢ</td>
+                <td id="conNo" style="text-align: center;background-color:yellow;border-width: 2px;border-color: black;"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+    <div id="buttonClick">
+        <button id="scrollToTopButton"><i class="fa-solid fa-arrow-up fa-xl" style="color: #ffffff;"></i></button></br>
+    <button id="scrollToBottomButton"><i class="fa-solid fa-arrow-up fa-rotate-180 fa-xl" style="color: #ffffff;"></i></button>
+    </div>
+</div>
+
+    <script>
+        const tableBody = document.getElementById("tableBody");
+
+// Thay đổi màu nền của table body thành màu trắng
+tableBody.style.backgroundColor = "#ffffff";
+
+        document.getElementById('addDataButton').addEventListener('click', function() {
+            const soLuong = document.getElementById('soLuong').value;
+            const donGia = document.getElementById('donGia').value;
+            const giaNhap = document.getElementById('giaNhap').value;
+            const dienGiai = document.getElementById('dienGiai').value;
+            const nhaCungCap = document.getElementById('nhaCungCap').value;
+            const traTien=document.getElementById('traTien').value;
+            const tongTien=soLuong*donGia;
+            // Tạo một dòng mới cho bảng và thêm dữ liệu từ trường input
+            const tableBody = document.getElementById('tableBody');
+            const newRow = tableBody.insertRow(tableBody.rows.length);
+            
+            // Tạo các ô dữ liệu và gán giá trị từ input vào các ô tương ứng
+            const sttCell = newRow.insertCell(0);
+            sttCell.textContent = tableBody.rows.length;
+            
+            const soLuongCell = newRow.insertCell(1);
+            soLuongCell.textContent = soLuong;
+            
+            const giaNhapCell = newRow.insertCell(2);
+            giaNhapCell.textContent = giaNhap;
+            
+            const donGiaCell = newRow.insertCell(3);
+            donGiaCell.textContent = donGia;
+            
+            const dienGiaiCell = newRow.insertCell(4);
+            dienGiaiCell.textContent = dienGiai;
+            
+            const tongTienCell=newRow.insertCell(5);
+            tongTienCell.textContent=tongTien.toLocaleString();
+
+            const traTienCell= newRow.insertCell(6);
+            traTienCell.textContent=traTien.toLocaleString();
+
+            const nhaCungCapCell=newRow.insertCell(7);
+            nhaCungCapCell.textContent=nhaCungCap;
+            // Bạn có thể tính toán các cột khác như TỔNG TIỀN, MÃ GIÁ NHẬP, MÃ GIÁ BÁN, MÃ HÀNG ở đây
+            const editButtonCell = newRow.insertCell(-1);
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Chỉnh sửa';
+    editButtonCell.appendChild(editButton);
+
+    const deleteButtonCell = newRow.insertCell(-1);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Xóa';
+    deleteButtonCell.appendChild(deleteButton);
+
+    // Thêm sự kiện cho nút "Chỉnh sửa"
+    editButton.addEventListener('click', function() {
+        // Thực hiện tác vụ chỉnh sửa ở đây
+        // Ví dụ: Hiển thị dữ liệu hàng hiện tại trong các trường nhập liệu để chỉnh sửa
+        document.getElementById('soLuong').value = soLuong;
+        document.getElementById('donGia').value = donGia;
+        document.getElementById('giaNhap').value = giaNhap;
+        document.getElementById('dienGiai').value = dienGiai;
+        document.getElementById('traTien').value = traTien;
+        newRow.remove();
+        updateSTT();
+        updateTotal();
+    });
+
+    // Thêm sự kiện cho nút "Xóa"
+    deleteButton.addEventListener('click', function() {
+        // Thực hiện tác vụ xóa ở đây
+        // Ví dụ: Xóa dòng bảng hiện tại
+        newRow.remove();
+        updateSTT();
+        // Sau khi xóa, bạn có thể cập nhật lại tổng toàn bảng bằng cách gọi hàm updateTotal()
+        updateTotal();
+    });
+
+            const maNhap = createMaNhap(nhaCungCap, giaNhap);
+            const maNhapCell = newRow.insertCell(8);
+                maNhapCell.textContent = maNhap;
+
+                const maGiaBan=createMaGiaBan(donGia);
+                const maGiaBanCell = newRow.insertCell(9);
+            maGiaBanCell.textContent = maGiaBan;
+
+            const maHang = createMaHang(nhaCungCap, dienGiai, donGia);
+    const maHangCell = newRow.insertCell(10);
+    maHangCell.textContent = maHang;
+    updateTotal();
+            clearForm();
+        });
+
+        function updateSTT() {
+    const tableBody = document.getElementById('tableBody');
+    const rows = tableBody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const sttCell = row.cells[0];
+        sttCell.textContent = i + 1;
+    }
+}
+
+        function clearForm() {
+            document.getElementById('soLuong').value = '';
+            document.getElementById('donGia').value = '';
+            document.getElementById('giaNhap').value = '';
+            document.getElementById('dienGiai').value = '';
+            document.getElementById('traTien').value = 0;
+        }
+
+        const tiLeInput = document.getElementById('tiLe');
+const giaNhapInput = document.getElementById('giaNhap');
+const donGiaInput = document.getElementById('donGia');
+
+tiLeInput.addEventListener('input', updateGiaBan);
+giaNhapInput.addEventListener('input', updateGiaBan);
+
+function updateGiaBan() {
+    const tiLe = parseFloat(tiLeInput.value);
+    const giaNhap = parseFloat(giaNhapInput.value);
+
+    if (!isNaN(tiLe) && !isNaN(giaNhap)) {
+        const giaBan = giaNhap + (giaNhap * tiLe / 100);
+        donGiaInput.value = giaBan;
+    }
+}
+
+
+        function createMaNhap(nhaCungCap, giaNhap) {
+    const words = nhaCungCap.split(' ');
+
+    if (words.length === 1) {
+        // Nếu có một từ, lấy 2 chữ cái đầu
+        const nccAbbreviation = nhaCungCap.substr(0, 2);
+        const giaNhapMultiplier = giaNhap * 2;
+        return nccAbbreviation + '23' + giaNhapMultiplier + '.1';
+    } else {
+        // Nếu có nhiều từ, lấy các chữ cái đầu tiên của từng từ
+        const abbreviation = words.map(word => word.charAt(0)).join('');
+        const giaNhapMultiplier = giaNhap * 2;
+        return abbreviation + '23' + giaNhapMultiplier + '.1';
+    }
+}
+
+
+function createMaGiaBan(donGia) {
+    
+    const randomNumber = Math.floor(Math.random() * 10);
+    
+    // Lấy 2 số đầu tiên của đơn giá
+    const donGiaAbbreviation = donGia.substr(0, 2);
+    
+    // Cộng thêm 10 đơn vị
+    const giaBan = parseInt(donGiaAbbreviation) + 10;
+    const remainingDigits = donGia.substr(2);
+
+    return randomNumber + giaBan.toString()+remainingDigits;
+}
+
+function createMaHang(nhaCungCap, dienGiai, donGia) {
+    const nccWords = nhaCungCap.split(' ');
+    const dienGiaiWords = dienGiai.split(' ');
+
+    if (nccWords.length === 1) {
+        // Nếu tên nhà cung cấp có một từ, lấy 2 chữ cái đầu tiên
+        const nccAbbreviation = nhaCungCap.substr(0, 2);
+        return nccAbbreviation + dienGiaiWords.map(word => word.toUpperCase().charAt(0)).join('') + donGia;
+    } else {
+        // Nếu tên nhà cung cấp có nhiều từ, lấy chữ cái đầu tiên của từng từ
+        const nccAbbreviations = nccWords.map(word => word.charAt(0)).join('');
+        return nccAbbreviations + dienGiaiWords.map(word => word.toUpperCase().charAt(0)).join('') + donGia;
+    }
+}
+
+function updateTotal() {
+    const tableBody = document.getElementById('tableBody');
+    const tongTienElements = tableBody.querySelectorAll('td:nth-child(6)'); // Lấy tất cả các ô cột Tổng Tiền
+    const tongTraTienElements = tableBody.querySelectorAll('td:nth-child(7)');
+
+    let tongToa = 0;
+    let tongTraTien = 0;
+
+    tongTienElements.forEach(element => {
+        const tongTienValue = parseFloat(element.textContent.replace(/[^0-9.-]+/g, '')); // Loại bỏ ký tự không phải số
+        tongToa += tongTienValue;
+    });
+
+    tongTraTienElements.forEach(element => {
+        const tongTraTienValue = parseFloat(element.textContent.replace(/[^0-9.-]+/g, '')); // Loại bỏ ký tự không phải số
+        tongTraTien += tongTraTienValue;
+    });
+
+
+    const tongToaElement = document.getElementById('tongToa');
+    const tongTraTienElement = document.getElementById('tongTraTien');
+    const conNoElement = document.getElementById('conNo');
+
+    tongToaElement.textContent = tongToa.toLocaleString();
+    tongTraTienElement.textContent = tongTraTien.toLocaleString();
+    conNoElement.textContent = (tongToa - tongTraTien).toLocaleString();
+}
+
+
+//xuatfileExxcel
+document.getElementById('exportExcelButton').addEventListener('click', function() {
+    const table = document.getElementById('tableBody');
+
+    // Tạo mảng headers theo thứ tự đã cho
+    const headers = ["STT", "SỐ LƯỢNG", "GIÁ NHẬP", "ĐƠN GIÁ", "DIỄN GIẢI", "TỔNG TIỀN", "TRẢ TIỀN", "NHÀ CUNG CẤP", "MÃ GIÁ NHẬP", "MÃ GIÁ BÁN", "MÃ HÀNG"];
+
+    // Tạo mảng dữ liệu từ bảng
+    const data = [];
+    for (let i = 0; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = [];
+        for (let j = 0; j < row.cells.length-2; j++) {
+            rowData.push(row.cells[j].textContent);
+        }
+        data.push(rowData);
+    }
+
+    // Tính toán giá trị "TỔNG TOA" và "TRẢ TIỀN"
+    let totalTOA = 0;
+    let totalPayment = 0;
+
+    for (let i = 0; i < data.length; i++) {
+        totalTOA += parseFloat(data[i][5]) || 0; // Cột "TỔNG TIỀN"
+        totalPayment += parseFloat(data[i][6]) || 0; // Cột "TRẢ TIỀN"
+    }
+
+    // Tính giá trị "CÒN NỢ" dựa trên "TỔNG TOA" và "TRẢ TIỀN"
+    const remainingDebt = totalTOA - totalPayment;
+
+    // Thêm các giá trị vào mảng dữ liệu
+    const dataArray = [headers, ...data, ["TỔNG TOA", "", "", "", "", totalTOA, "", "", "", "", ""], ["TRẢ TIỀN", "", "", "", "", totalPayment, "", "", "", "", ""], ["CÒN NỢ", "", "", "", "", remainingDebt, "", "", "", "", ""]];
+
+    // Tạo một workbook mới
+    const workbook = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(dataArray);
+
+    // Thêm sheet mới vào workbook
+    XLSX.utils.book_append_sheet(workbook, ws, 'DanhSachSanPham');
+
+    // Tạo tệp Excel
+    XLSX.writeFile(workbook, 'DanhSachSanPham.xlsx');
+});
+
+document.getElementById('exportDataButton').addEventListener('click', function() {
+    // Tạo mảng headers với các tên cột
+    const headers = ["Tên hàng hoá", "Nhà cung cấp", "Giá nhập", "Đơn giá"];
+
+    // Tạo mảng dữ liệu từ bảng
+    const data = [];
+    const tableBody = document.getElementById('tableBody');
+
+    for (let i = 0; i < tableBody.rows.length; i++) {
+        const row = tableBody.rows[i];
+        const rowData = [
+            row.cells[4].textContent,  // Tên hàng hoá
+            row.cells[7].textContent,  // Nhà cung cấp
+            row.cells[2].textContent,  // Giá nhập
+            row.cells[3].textContent   // Đơn giá
+        ];
+        data.push(rowData);
+    }
+
+    // Tạo một workbook mới
+    const workbook = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+
+    // Thêm sheet mới vào workbook
+    XLSX.utils.book_append_sheet(workbook, ws, 'DanhSachSanPham');
+
+    // Tạo tệp Excel
+    XLSX.writeFile(workbook, 'DanhSachSanPham.xlsx');
+});
+// Thêm vào cuối mã JavaScript
+
+  // Nút lướt xuống cuối
+  document.getElementById("scrollToBottomButton").addEventListener("click", function () {
+    scrollToBottom();
+});
+
+// Nút lướt lên đầu
+document.getElementById("scrollToTopButton").addEventListener("click", function () {
+    scrollToTop();
+});
+
+// Cuộn xuống đáy
+function scrollToBottom() {
+    const scrollHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    window.scrollTo(0, scrollHeight);
+}
+
+
+// Cuộn lên đầu
+function scrollToTop() {
+    const scrollHeight = document.body.scrollHeight;
+    const step = Math.max(window.scrollY / 100,50); // Chia thành 100 bước (hoặc điều chỉnh số bước tùy ý)
+    let currentPosition = window.scrollY;
+
+    const scrollInterval = setInterval(function () {
+        currentPosition -= step;
+        window.scrollTo(0, currentPosition);
+
+        if (currentPosition <= scrollHeight) {
+            clearInterval(scrollInterval);
+        }
+    }, 10); // Thời gian giữa các bước cuộn (hoặc điều chỉnh tùy ý)
+}
+
+//ghi âm số lượng
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord');
+    const stopButton = document.getElementById('stopRecord');
+    const soLuongInput = document.getElementById('soLuong'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        soLuongInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+
+//ghi âm giá nhập
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord1');
+    const stopButton = document.getElementById('stopRecord1');
+    const giaNhapInput = document.getElementById('giaNhap'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        giaNhapInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+//ghi âm  tỉ lệ %
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord2');
+    const stopButton = document.getElementById('stopRecord2');
+    const tiLeInput = document.getElementById('tiLe'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        tiLeInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+//ghi âm đơn giá
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord3');
+    const stopButton = document.getElementById('stopRecord3');
+    const donGiaInput = document.getElementById('donGia'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        donGiaInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+//ghi âm Tên hàng hoá 
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord4');
+    const stopButton = document.getElementById('stopRecord4');
+    const dienGiaiInput = document.getElementById('dienGiai'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        dienGiaiInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+//ghi âm nhà cung cấp
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    const startButton = document.getElementById('startRecord5');
+    const stopButton = document.getElementById('stopRecord5');
+    const nhaCungCapInput = document.getElementById('nhaCungCap'); // Lấy thẻ input
+
+    // Thiết lập ngôn ngữ
+    recognition.lang = 'vi-VN';
+
+    // Sự kiện khi ghi âm hoàn thành
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        nhaCungCapInput.value = transcript; // Cập nhật giá trị của input
+    };
+
+    // Sự kiện khi có lỗi
+    recognition.onerror = function(event) {
+        console.error('Lỗi ghi âm:', event.error);
+    };
+
+    startButton.addEventListener('click', function() {
+      
+            // Bắt đầu ghi âm khi bấm vào nút "Bắt đầu ghi âm"
+            recognition.start();
+        
+    });
+
+    stopButton.addEventListener('click', function() {
+        // Dừng ghi âm khi bấm vào nút "Dừng ghi âm"
+        recognition.stop();
+    });
+} else {
+    console.error('Trình duyệt không hỗ trợ Web Speech API.');
+}
+</script>
+</body>
+</html>
